@@ -1,5 +1,6 @@
 import WhatsAppCTA from '@/components/WhatsAppCTA'
 import Footer from '@/components/Footer'
+import StudioSection from '@/components/StudioSection'
 import { WHATSAPP_MESSAGES } from '@/lib/constants'
 
 export default function HomePage() {
@@ -18,21 +19,26 @@ export default function HomePage() {
             <a href="#partnership" className="btn-primary">
               Diventa Partner
             </a>
-            <a href="#come-funziona" className="btn-secondary">
-              Come Funziona
+            <a href="#studio" className="btn-secondary">
+              Il Nostro Studio
             </a>
           </div>
         </section>
 
+        {/* Tribù Studio Section */}
+        <div id="studio">
+          <StudioSection showDiscount={false} />
+        </div>
+
         {/* Come Funziona */}
         <section id="come-funziona" className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Come Funziona</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Come Funziona per gli Hotel</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="card text-center">
               <div className="text-4xl mb-4">📱</div>
               <h3 className="text-xl font-semibold mb-3">Scansiona QR</h3>
               <p className="text-gray-600">
-                Gli ospiti scansionano il QR code in hotel e accedono alla tua landing personalizzata
+                Gli ospiti scansionano il QR code in hotel e accedono alla landing personalizzata
               </p>
             </div>
             <div className="card text-center">
