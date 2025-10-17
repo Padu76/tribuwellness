@@ -8,10 +8,11 @@ const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD
 const AUTH_KEY = 'tribu_admin_auth'
 
 export function useAdminAuth() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const router = useRouter()
 
   useEffect(() => {
+    // Check solo al mount
     const auth = sessionStorage.getItem(AUTH_KEY)
     setIsAuthenticated(auth === 'true')
   }, [])
@@ -37,17 +38,23 @@ export function useAdminAuth() {
 export function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const { login } = useAdminAuth()
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setLoading(true)
 
-    if (login(password)) {
-      onSuccess()
+    if (password === ADMIN_PASSWORD) {
+      sessionStorage.setItem(AUTH_KEY, 'true')
+      setTimeout(() => {
+        setLoading(false)
+        onSuccess()
+      }, 300)
     } else {
       setError('Password non corretta')
       setPassword('')
+      setLoading(false)
     }
   }
 
@@ -72,7 +79,8 @@ export function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              disabled={loading}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-50"
               placeholder="Inserisci password admin"
               required
             />
@@ -86,9 +94,10 @@ export function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
 
           <button
             type="submit"
-            className="btn-primary w-full justify-center"
+            disabled={loading}
+            className="btn-primary w-full justify-center disabled:opacity-50"
           >
-            Accedi
+            {loading ? 'Accesso...' : 'Accedi'}
           </button>
         </form>
       </div>

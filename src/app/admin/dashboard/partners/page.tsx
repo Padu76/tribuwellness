@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { AdminHeader, useAdminAuth } from '@/components/AdminAuth'
+import { AdminHeader } from '@/components/AdminAuth'
 import { supabase } from '@/lib/supabase'
 import { Plus, Edit, Trash2, ExternalLink } from 'lucide-react'
 import type { Partner } from '@/types'
 
+const AUTH_KEY = 'tribu_admin_auth'
+
 export default function PartnersManagement() {
   const router = useRouter()
-  const { isAuthenticated, logout } = useAdminAuth()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [checking, setChecking] = useState(true)
   const [partners, setPartners] = useState<Partner[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
@@ -24,12 +27,15 @@ export default function PartnersManagement() {
   })
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    const auth = sessionStorage.getItem(AUTH_KEY)
+    if (auth !== 'true') {
       router.push('/admin')
-      return
+    } else {
+      setIsAuthenticated(true)
+      setChecking(false)
+      loadPartners()
     }
-    loadPartners()
-  }, [isAuthenticated, router])
+  }, [router])
 
   const loadPartners = async () => {
     setLoading(true)
@@ -46,13 +52,11 @@ export default function PartnersManagement() {
     e.preventDefault()
     
     if (editingPartner) {
-      // Update
       await supabase
         .from('partners')
         .update(formData)
         .eq('id', editingPartner.id)
     } else {
-      // Insert
       await supabase
         .from('partners')
         .insert([formData])
@@ -99,11 +103,24 @@ export default function PartnersManagement() {
     })
   }
 
+  const handleLogout = () => {
+    sessionStorage.removeItem(AUTH_KEY)
+    router.push('/admin')
+  }
+
+  if (checking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Caricamento...</p>
+      </div>
+    )
+  }
+
   if (!isAuthenticated) return null
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminHeader onLogout={logout} />
+      <AdminHeader onLogout={handleLogout} />
 
       <div className="container mx-auto px-4 pb-16">
         <div className="flex justify-between items-center mb-8">

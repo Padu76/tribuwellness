@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { AdminHeader, useAdminAuth } from '@/components/AdminAuth'
+import { AdminHeader } from '@/components/AdminAuth'
 import { supabase } from '@/lib/supabase'
 import { Plus, Edit, Trash2, ExternalLink } from 'lucide-react'
 import type { Activity } from '@/types'
 
+const AUTH_KEY = 'tribu_admin_auth'
+
 export default function ActivitiesManagement() {
   const router = useRouter()
-  const { isAuthenticated, logout } = useAdminAuth()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [checking, setChecking] = useState(true)
   const [activities, setActivities] = useState<Activity[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
@@ -25,12 +28,15 @@ export default function ActivitiesManagement() {
   })
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    const auth = sessionStorage.getItem(AUTH_KEY)
+    if (auth !== 'true') {
       router.push('/admin')
-      return
+    } else {
+      setIsAuthenticated(true)
+      setChecking(false)
+      loadActivities()
     }
-    loadActivities()
-  }, [isAuthenticated, router])
+  }, [router])
 
   const loadActivities = async () => {
     setLoading(true)
@@ -47,13 +53,11 @@ export default function ActivitiesManagement() {
     e.preventDefault()
     
     if (editingActivity) {
-      // Update
       await supabase
         .from('activities')
         .update(formData)
         .eq('id', editingActivity.id)
     } else {
-      // Insert
       await supabase
         .from('activities')
         .insert([formData])
@@ -102,6 +106,11 @@ export default function ActivitiesManagement() {
     })
   }
 
+  const handleLogout = () => {
+    sessionStorage.removeItem(AUTH_KEY)
+    router.push('/admin')
+  }
+
   const categoryEmoji: Record<string, string> = {
     spa: '💆',
     outdoor: '🏃',
@@ -110,11 +119,19 @@ export default function ActivitiesManagement() {
     fitness: '💪',
   }
 
+  if (checking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Caricamento...</p>
+      </div>
+    )
+  }
+
   if (!isAuthenticated) return null
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminHeader onLogout={logout} />
+      <AdminHeader onLogout={handleLogout} />
 
       <div className="container mx-auto px-4 pb-16">
         <div className="flex justify-between items-center mb-8">

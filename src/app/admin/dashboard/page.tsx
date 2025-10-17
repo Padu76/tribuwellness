@@ -2,30 +2,35 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { AdminHeader, useAdminAuth } from '@/components/AdminAuth'
+import { AdminHeader } from '@/components/AdminAuth'
 import { supabase } from '@/lib/supabase'
 import { Users, Activity, BarChart3, Building2 } from 'lucide-react'
 import Link from 'next/link'
 
+const AUTH_KEY = 'tribu_admin_auth'
+
 export default function AdminDashboard() {
   const router = useRouter()
-  const { isAuthenticated, logout } = useAdminAuth()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [checking, setChecking] = useState(true)
   const [stats, setStats] = useState({
     partners: 0,
     activities: 0,
     totalVisits: 0,
     leads: 0,
   })
-  const [loading, setLoading] = useState(true)
+  const [loadingStats, setLoadingStats] = useState(true)
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    const auth = sessionStorage.getItem(AUTH_KEY)
+    if (auth !== 'true') {
       router.push('/admin')
-      return
+    } else {
+      setIsAuthenticated(true)
+      setChecking(false)
+      loadStats()
     }
-
-    loadStats()
-  }, [isAuthenticated, router])
+  }, [router])
 
   const loadStats = async () => {
     try {
@@ -45,8 +50,21 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('Error loading stats:', error)
     } finally {
-      setLoading(false)
+      setLoadingStats(false)
     }
+  }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem(AUTH_KEY)
+    router.push('/admin')
+  }
+
+  if (checking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Caricamento...</p>
+      </div>
+    )
   }
 
   if (!isAuthenticated) {
@@ -55,7 +73,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminHeader onLogout={logout} />
+      <AdminHeader onLogout={handleLogout} />
 
       <div className="container mx-auto px-4 pb-16">
         {/* Stats Cards */}
@@ -67,7 +85,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <p className="text-sm text-gray-600 font-semibold">Partner</p>
-                <p className="text-3xl font-bold">{loading ? '...' : stats.partners}</p>
+                <p className="text-3xl font-bold">{loadingStats ? '...' : stats.partners}</p>
               </div>
             </div>
           </div>
@@ -79,7 +97,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <p className="text-sm text-gray-600 font-semibold">Esperienze</p>
-                <p className="text-3xl font-bold">{loading ? '...' : stats.activities}</p>
+                <p className="text-3xl font-bold">{loadingStats ? '...' : stats.activities}</p>
               </div>
             </div>
           </div>
@@ -91,7 +109,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <p className="text-sm text-gray-600 font-semibold">Visite Totali</p>
-                <p className="text-3xl font-bold">{loading ? '...' : stats.totalVisits}</p>
+                <p className="text-3xl font-bold">{loadingStats ? '...' : stats.totalVisits}</p>
               </div>
             </div>
           </div>
@@ -103,7 +121,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <p className="text-sm text-gray-600 font-semibold">Richieste Lead</p>
-                <p className="text-3xl font-bold">{loading ? '...' : stats.leads}</p>
+                <p className="text-3xl font-bold">{loadingStats ? '...' : stats.leads}</p>
               </div>
             </div>
           </div>
