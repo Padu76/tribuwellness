@@ -1,7 +1,6 @@
-import WhatsAppCTA from '@/components/WhatsAppCTA'
 import Footer from '@/components/Footer'
 import StudioSection from '@/components/StudioSection'
-import { WHATSAPP_MESSAGES } from '@/lib/constants'
+import PartnershipForm from '@/components/PartnershipForm'
 
 export default function HomePage() {
   return (
@@ -58,16 +57,40 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* CTA Partnership */}
-        <section id="partnership" className="card max-w-3xl mx-auto text-center bg-gradient-to-r from-primary-50 to-accent-50">
-          <h2 className="text-3xl font-bold mb-4">Sei un hotel, B&B o resort?</h2>
-          <p className="text-gray-700 mb-6">
-            Offri ai tuoi ospiti un servizio wellness esclusivo senza costi di gestione
-          </p>
-          <WhatsAppCTA
-            message={WHATSAPP_MESSAGES.requestInfo()}
-            label="Richiedi Info Partnership"
-          />
+        {/* Vantaggi Partnership */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-center mb-12">Vantaggi per la Tua Struttura</h2>
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="card">
+              <h3 className="text-xl font-semibold mb-3">✨ Valore Aggiunto</h3>
+              <p className="text-gray-600">
+                Offri un servizio esclusivo ai tuoi ospiti senza costi operativi
+              </p>
+            </div>
+            <div className="card">
+              <h3 className="text-xl font-semibold mb-3">📊 Analytics</h3>
+              <p className="text-gray-600">
+                Monitora quanti ospiti utilizzano il servizio e converti a piani premium
+              </p>
+            </div>
+            <div className="card">
+              <h3 className="text-xl font-semibold mb-3">🎨 Branding</h3>
+              <p className="text-gray-600">
+                Landing page personalizzata con logo e colori della tua struttura
+              </p>
+            </div>
+            <div className="card">
+              <h3 className="text-xl font-semibold mb-3">🚀 Zero Gestione</h3>
+              <p className="text-gray-600">
+                Esponi il QR code e basta. Noi ci occupiamo di tutto il resto
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Form Partnership */}
+        <section id="partnership">
+          <PartnershipForm />
         </section>
       </div>
 
