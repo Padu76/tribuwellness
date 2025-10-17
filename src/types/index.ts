@@ -20,6 +20,7 @@ export interface Activity {
   image_url?: string
   website_url?: string
   maps_url?: string
+  discount_percentage: number
   created_at: string
   is_active: boolean
 }

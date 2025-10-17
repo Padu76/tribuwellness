@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { AdminHeader } from '@/components/AdminAuth'
+import QRCodeGenerator from '@/components/QRCodeGenerator'
 import { supabase } from '@/lib/supabase'
-import { Plus, Edit, Trash2, ExternalLink } from 'lucide-react'
+import { Plus, Edit, Trash2, ExternalLink, QrCode } from 'lucide-react'
 import type { Activity } from '@/types'
 
 const AUTH_KEY = 'tribu_admin_auth'
@@ -17,6 +18,7 @@ export default function ActivitiesManagement() {
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editingActivity, setEditingActivity] = useState<Activity | null>(null)
+  const [qrActivity, setQrActivity] = useState<Activity | null>(null)
   const [formData, setFormData] = useState({
     title: '',
     category: 'wellness' as 'spa' | 'outdoor' | 'food' | 'wellness' | 'fitness',
@@ -25,6 +27,7 @@ export default function ActivitiesManagement() {
     image_url: '',
     website_url: '',
     maps_url: '',
+    discount_percentage: 0,
   })
 
   useEffect(() => {
@@ -77,6 +80,7 @@ export default function ActivitiesManagement() {
       image_url: activity.image_url || '',
       website_url: activity.website_url || '',
       maps_url: activity.maps_url || '',
+      discount_percentage: activity.discount_percentage || 0,
     })
     setShowForm(true)
   }
@@ -103,6 +107,7 @@ export default function ActivitiesManagement() {
       image_url: '',
       website_url: '',
       maps_url: '',
+      discount_percentage: 0,
     })
   }
 
@@ -190,6 +195,18 @@ export default function ActivitiesManagement() {
                   />
                 </div>
                 <div>
+                  <label className="block text-sm font-semibold mb-2">Sconto Ospiti Hotel (%)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={formData.discount_percentage}
+                    onChange={(e) => setFormData({...formData, discount_percentage: parseInt(e.target.value) || 0})}
+                    className="w-full px-4 py-2 border rounded-lg"
+                    placeholder="0 = nessuno sconto, 20 = 20%"
+                  />
+                </div>
+                <div>
                   <label className="block text-sm font-semibold mb-2">Immagine URL</label>
                   <input
                     type="url"
@@ -258,12 +275,17 @@ export default function ActivitiesManagement() {
                   <h3 className="text-xl font-bold flex items-center gap-2">
                     <span>{categoryEmoji[activity.category]}</span>
                     {activity.title}
+                    {activity.discount_percentage > 0 && (
+                      <span className="bg-accent-500 text-white px-2 py-1 rounded text-xs font-bold">
+                        -{activity.discount_percentage}%
+                      </span>
+                    )}
                   </h3>
                   <p className="text-sm text-gray-600">
                     {activity.location} • {activity.category}
                   </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <a
                     href="/esperienze"
                     target="_blank"
@@ -273,6 +295,13 @@ export default function ActivitiesManagement() {
                     <ExternalLink size={16} />
                     Vedi
                   </a>
+                  <button
+                    onClick={() => setQrActivity(activity)}
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 text-sm flex items-center gap-2"
+                  >
+                    <QrCode size={16} />
+                    QR Code
+                  </button>
                   <button
                     onClick={() => handleEdit(activity)}
                     className="btn-secondary text-sm flex items-center gap-2"
@@ -293,6 +322,14 @@ export default function ActivitiesManagement() {
           )}
         </div>
       </div>
+
+      {/* QR Code Modal */}
+      {qrActivity && (
+        <QRCodeGenerator
+          activity={qrActivity}
+          onClose={() => setQrActivity(null)}
+        />
+      )}
     </div>
   )
 }

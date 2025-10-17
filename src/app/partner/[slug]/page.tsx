@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   return {
     title: `${partner.name} | Tribu Wellness`,
-    description: `Benvenuto ospite di ${partner.name}. Scopri allenamenti personalizzati e esperienze wellness a Verona con sconto 20%.`,
+    description: `Benvenuto ospite di ${partner.name}. Allenati con Tribù Studio con SCONTO 20% esclusivo e scopri esperienze wellness a Verona.`,
   }
 }
 
@@ -53,6 +53,37 @@ export default async function PartnerPage({ params }: { params: { slug: string }
         {/* Hero Partner */}
         <PartnerHero partner={partner} />
 
+        {/* Info Sconto Tribù Studio */}
+        <section className="mb-8">
+          <div className="card max-w-4xl mx-auto bg-gradient-to-r from-accent-100 to-accent-50 border-2 border-accent-500">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <span className="text-4xl">🎁</span>
+              <h2 className="text-2xl md:text-3xl font-bold text-center">Vantaggi Esclusivi Ospiti {partner.name}</h2>
+            </div>
+            <div className="bg-white rounded-lg p-6 max-w-2xl mx-auto">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="bg-primary-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">
+                  20%
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg mb-2">Sconto Tribù Studio</h3>
+                  <p className="text-gray-700 text-sm mb-3">
+                    Allenati con personal trainer certificati e risparmia il <strong>20% su tutte le sessioni</strong>!
+                  </p>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>✓ Lezioni individuali Personal Training</li>
+                    <li>✓ Sessioni di coppia</li>
+                    <li>✓ Prima lezione con massaggio incluso</li>
+                  </ul>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 text-center mt-4">
+                * Menziona di essere ospite di {partner.name} quando prenoti
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Tribù Studio con sconto 20% */}
         <StudioSection partnerName={partner.name} showDiscount={true} />
 
@@ -64,10 +95,10 @@ export default async function PartnerPage({ params }: { params: { slug: string }
           <div className="card max-w-3xl mx-auto text-center">
             <div className="text-4xl mb-4">🌟</div>
             <h3 className="text-2xl font-semibold mb-3">
-              Esperienze Locali
+              Altre Esperienze Wellness
             </h3>
             <p className="text-gray-600 mb-6">
-              Spa, ristoranti healthy, attività outdoor e molto altro nel territorio veronese.
+              Spa, ristoranti healthy, attività outdoor e molto altro nel territorio veronese. Alcune con sconti dedicati!
             </p>
             <a
               href="/esperienze"
@@ -76,34 +107,6 @@ export default async function PartnerPage({ params }: { params: { slug: string }
               Esplora Tutte le Esperienze
             </a>
           </div>
-        </section>
-
-        {/* Info Aggiuntive */}
-        <section className="card max-w-3xl mx-auto bg-gradient-to-r from-primary-50 to-accent-50">
-          <h2 className="text-2xl font-bold mb-4 text-center">
-            Vantaggi Esclusivi Ospiti {partner.name}
-          </h2>
-          <div className="grid md:grid-cols-2 gap-4 mb-6">
-            <div className="bg-white rounded-lg p-4">
-              <h3 className="font-semibold mb-2">💪 Fitness</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>✓ Sconto 20% allenamenti</li>
-                <li>✓ Consulenza gratuita</li>
-                <li>✓ Programmi personalizzati</li>
-              </ul>
-            </div>
-            <div className="bg-white rounded-lg p-4">
-              <h3 className="font-semibold mb-2">🌟 Esperienze</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>✓ Accesso esperienze partner</li>
-                <li>✓ Sconti esclusivi spa & wellness</li>
-                <li>✓ Guida locale attività outdoor</li>
-              </ul>
-            </div>
-          </div>
-          <p className="text-center text-sm text-gray-600">
-            Mostra il QR code del tuo hotel per usufruire dei vantaggi
-          </p>
         </section>
       </div>
 

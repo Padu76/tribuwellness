@@ -9,9 +9,19 @@ interface ExperienceCardProps {
 
 export default function ExperienceCard({ activity }: ExperienceCardProps) {
   const imageUrl = activity.image_url || getStaticPlaceholder(activity.category)
+  const hasDiscount = activity.discount_percentage > 0
 
   return (
-    <div className="card">
+    <div className="card relative">
+      {/* Badge Sconto */}
+      {hasDiscount && (
+        <div className="absolute top-3 right-3 z-10">
+          <span className="bg-accent-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+            -{activity.discount_percentage}% OSPITI
+          </span>
+        </div>
+      )}
+
       <div className="mb-4 -mx-6 -mt-6 rounded-t-xl overflow-hidden relative h-48">
         <Image
           src={imageUrl}
@@ -33,6 +43,14 @@ export default function ExperienceCard({ activity }: ExperienceCardProps) {
       <p className="text-gray-600 mb-4">
         {activity.description}
       </p>
+      
+      {hasDiscount && (
+        <div className="bg-accent-50 border border-accent-200 rounded-lg p-2 mb-4">
+          <p className="text-xs text-accent-700 font-semibold">
+            🎁 Sconto {activity.discount_percentage}% per ospiti hotel partner
+          </p>
+        </div>
+      )}
       
       <div className="flex gap-2">
         {activity.website_url && (
