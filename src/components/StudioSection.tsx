@@ -88,12 +88,12 @@ export default function StudioSection({ partnerName, showDiscount = true }: Stud
             const Icon = service.icon
             return (
               <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <div className="relative h-40">
+                <div className="relative h-48 bg-gray-100">
                   <Image
                     src={service.image}
                     alt={service.title}
                     fill
-                    className="object-cover"
+                    className="object-contain p-2"
                   />
                 </div>
                 <div className="p-4 flex gap-4 items-start">
