@@ -44,7 +44,7 @@ export default async function EsperienzePage() {
   // Trova Tribù Studio
   const tribuStudio = activities.find(a => a.title.toLowerCase().includes('tribù studio'))
   
-  // Altre attività
+  // Altre attività (quelle importanti per trovare partner!)
   const otherActivities = activities.filter(a => a.id !== tribuStudio?.id)
 
   // Group by category
@@ -62,28 +62,25 @@ export default async function EsperienzePage() {
         {/* Hero */}
         <section className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            Esperienze Wellness
+            Esperienze Wellness Verona
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Scopri i migliori luoghi per benessere, fitness e healthy lifestyle a Verona e dintorni
           </p>
         </section>
 
-        {/* Tribù Studio Evidenziato */}
-        {tribuStudio && (
-          <section className="mb-16">
-            <div className="card max-w-5xl mx-auto bg-gradient-to-br from-primary-50 via-white to-accent-50 border-2 border-primary-500 overflow-hidden">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-primary-600 text-white px-4 py-2 rounded-full text-sm font-bold">
-                  ⭐ SERVIZIO PRINCIPALE
+        {/* Grid con Tribù Studio + prime 2 esperienze */}
+        <section className="mb-16">
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Tribù Studio - Featured */}
+            {tribuStudio && (
+              <div className="card border-2 border-primary-500 bg-gradient-to-br from-primary-50 to-white relative overflow-hidden">
+                <div className="absolute top-3 right-3 z-10">
+                  <span className="bg-accent-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                    -20% OSPITI
+                  </span>
                 </div>
-                <div className="bg-accent-500 text-white px-4 py-2 rounded-full text-sm font-bold">
-                  SCONTO 20% OSPITI HOTEL
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="relative h-64 md:h-full min-h-[300px] rounded-xl overflow-hidden">
+                <div className="relative h-48 -mx-6 -mt-6 mb-4">
                   <Image
                     src={tribuStudio.image_url || '/images/studio/interior.jpg'}
                     alt={tribuStudio.title}
@@ -91,83 +88,64 @@ export default async function EsperienzePage() {
                     className="object-cover"
                   />
                 </div>
-
-                <div className="flex flex-col justify-center">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="bg-primary-100 p-3 rounded-lg">
-                      <Dumbbell className="text-primary-600" size={32} />
-                    </div>
-                    <h2 className="text-3xl font-bold">{tribuStudio.title}</h2>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="bg-primary-600 text-white p-2 rounded-lg">
+                    <Dumbbell size={20} />
                   </div>
-
-                  <div className="flex items-center gap-2 text-gray-600 mb-4">
-                    <MapPin size={18} />
-                    <span>{tribuStudio.location}</span>
-                  </div>
-
-                  <p className="text-gray-700 mb-6 text-lg">
-                    {tribuStudio.description}
-                  </p>
-
-                  <div className="flex gap-3 flex-wrap">
-                    <Link href="/studio" className="btn-primary flex items-center gap-2">
-                      <Dumbbell size={18} />
-                      Scopri di Più
-                    </Link>
-                    {tribuStudio.website_url && (
-                      <a
-                        href={tribuStudio.website_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-secondary flex items-center gap-2"
-                      >
-                        <ExternalLink size={18} />
-                        Sito Web
-                      </a>
-                    )}
-                    {tribuStudio.maps_url && (
-                      <a
-                        href={tribuStudio.maps_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-secondary flex items-center gap-2"
-                      >
-                        <MapPin size={18} />
-                        Mappa
-                      </a>
-                    )}
-                  </div>
+                  <h3 className="text-xl font-bold">{tribuStudio.title}</h3>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600 text-sm mb-3">
+                  <MapPin size={14} />
+                  <span>{tribuStudio.location}</span>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{tribuStudio.description}</p>
+                <div className="flex gap-2">
+                  <Link href="/studio" className="btn-primary text-sm w-full justify-center">
+                    Scopri
+                  </Link>
                 </div>
               </div>
-            </div>
-          </section>
+            )}
+
+            {/* Prime 2 altre esperienze in evidenza */}
+            {otherActivities.slice(0, 2).map((activity) => (
+              <ExperienceCard key={activity.id} activity={activity} />
+            ))}
+          </div>
+        </section>
+
+        {/* Tutte le Esperienze per Categoria */}
+        {Object.keys(categorizedActivities).length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">
+              Nuove esperienze partner in arrivo...
+            </p>
+          </div>
+        ) : (
+          Object.entries(categorizedActivities).map(([category, items]) => (
+            <section key={category} className="mb-16">
+              <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                <span>{categoryEmojis[category]}</span>
+                {categoryLabels[category]}
+              </h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {items.map((activity) => (
+                  <ExperienceCard key={activity.id} activity={activity} />
+                ))}
+              </div>
+            </section>
+          ))
         )}
 
-        {/* Altre Esperienze */}
-        <section>
-          <h2 className="text-3xl font-bold mb-8">Altre Esperienze Locali</h2>
-          
-          {Object.keys(categorizedActivities).length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">
-                Nuove esperienze in arrivo...
-              </p>
-            </div>
-          ) : (
-            Object.entries(categorizedActivities).map(([category, items]) => (
-              <div key={category} className="mb-16">
-                <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                  <span>{categoryEmojis[category]}</span>
-                  {categoryLabels[category]}
-                </h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {items.map((activity) => (
-                    <ExperienceCard key={activity.id} activity={activity} />
-                  ))}
-                </div>
-              </div>
-            ))
-          )}
+        {/* CTA Partner */}
+        <section className="card max-w-3xl mx-auto text-center bg-gradient-to-r from-accent-50 to-primary-50 mt-16">
+          <h2 className="text-3xl font-bold mb-4">Vuoi essere in questa lista?</h2>
+          <p className="text-gray-700 mb-6">
+            Se gestisci una spa, ristorante healthy, centro wellness o attività outdoor a Verona, entra nel network Tribu Wellness!
+          </p>
+          <a href="/#partnership" className="btn-primary">
+            Diventa Partner
+          </a>
         </section>
       </div>
 
