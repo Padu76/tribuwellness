@@ -1,5 +1,6 @@
 import { Instagram, Facebook, Globe } from 'lucide-react'
 import { SOCIAL_LINKS } from '@/lib/constants'
+import Link from 'next/link'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -10,7 +11,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <h3 className="text-white text-xl font-bold mb-4">Tribu Wellness</h3>
+            <h3 className="text-white text-xl font-bold mb-4">Tribù Wellness</h3>
             <p className="text-sm">
               Connetti il mondo turistico con fitness e benessere locale
             </p>
@@ -21,19 +22,34 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4">Link Utili</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/" className="hover:text-white transition-colors">
+                <Link href="/" className="hover:text-white transition-colors">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/#come-funziona" className="hover:text-white transition-colors">
+                <Link href="/studio" className="hover:text-white transition-colors">
+                  Tribù Studio
+                </Link>
+              </li>
+              <li>
+                <Link href="/esperienze" className="hover:text-white transition-colors">
+                  Esperienze
+                </Link>
+              </li>
+              <li>
+                <Link href="/#come-funziona" className="hover:text-white transition-colors">
                   Come Funziona
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/#partnership" className="hover:text-white transition-colors">
+                <Link href="/partner-info" className="hover:text-white transition-colors font-semibold">
+                  Info Partner
+                </Link>
+              </li>
+              <li>
+                <Link href="/#partnership" className="hover:text-white transition-colors">
                   Diventa Partner
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -74,7 +90,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
-          <p>© {currentYear} Tribu Wellness. Tutti i diritti riservati.</p>
+          <p>© {currentYear} Tribù Wellness. Tutti i diritti riservati.</p>
         </div>
       </div>
     </footer>
