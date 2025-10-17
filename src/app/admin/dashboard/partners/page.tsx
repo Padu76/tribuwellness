@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { AdminHeader } from '@/components/AdminAuth'
 import { supabase } from '@/lib/supabase'
-import { Plus, Edit, Trash2, ExternalLink } from 'lucide-react'
+import { Plus, Edit, Trash2, ExternalLink, BarChart3 } from 'lucide-react'
+import Link from 'next/link'
 import type { Partner } from '@/types'
 
 const AUTH_KEY = 'tribu_admin_auth'
@@ -234,6 +235,13 @@ export default function PartnersManagement() {
                   </p>
                 </div>
                 <div className="flex gap-2">
+                  <Link
+                    href={`/admin/dashboard/analytics/${partner.slug}`}
+                    className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 text-sm flex items-center gap-2"
+                  >
+                    <BarChart3 size={16} />
+                    Analytics
+                  </Link>
                   <a
                     href={`/partner/${partner.slug}`}
                     target="_blank"
