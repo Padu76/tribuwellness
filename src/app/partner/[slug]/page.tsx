@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import WhatsAppCTA from '@/components/WhatsAppCTA'
 import Footer from '@/components/Footer'
+import PartnerHero from '@/components/PartnerHero'
 import { WHATSAPP_MESSAGES } from '@/lib/constants'
 import type { Partner } from '@/types'
 
@@ -51,22 +52,7 @@ export default async function PartnerPage({ params }: { params: { slug: string }
     <>
       <div className="container mx-auto px-4 py-16">
         {/* Hero Partner */}
-        <section className="text-center mb-16">
-          <div className="mb-6">
-            <span className="inline-block bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-sm font-semibold">
-              Partner Ufficiale Tribu Wellness
-            </span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Benvenuto ospite di<br />
-            <span className="text-primary-600">{partner.name}</span>
-          </h1>
-          {partner.description && (
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-              {partner.description}
-            </p>
-          )}
-        </section>
+        <PartnerHero partner={partner} />
 
         {/* Servizi */}
         <section className="mb-16">
