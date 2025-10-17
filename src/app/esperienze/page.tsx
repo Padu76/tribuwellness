@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import Footer from '@/components/Footer'
 import ExperienceCard from '@/components/ExperienceCard'
-import { MapPin, ExternalLink, Dumbbell } from 'lucide-react'
+import { MapPin, ExternalLink, Dumbbell, Home, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Activity } from '@/types'
@@ -58,7 +58,59 @@ export default async function EsperienzePage() {
 
   return (
     <>
+      {/* Navigation Header */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo/Brand */}
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center group-hover:bg-primary-700 transition-colors">
+                <Dumbbell className="text-white" size={20} />
+              </div>
+              <span className="text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                Tribù Wellness
+              </span>
+            </Link>
+
+            {/* Navigation Links */}
+            <nav className="flex items-center gap-4">
+              <Link 
+                href="/" 
+                className="flex items-center gap-2 text-gray-700 hover:text-primary-600 transition-colors font-medium"
+              >
+                <Home size={18} />
+                <span className="hidden sm:inline">Home</span>
+              </Link>
+              <Link 
+                href="/studio" 
+                className="flex items-center gap-2 text-gray-700 hover:text-primary-600 transition-colors font-medium"
+              >
+                <Dumbbell size={18} />
+                <span className="hidden sm:inline">Tribù Studio</span>
+              </Link>
+              <Link 
+                href="/#partnership" 
+                className="btn-primary text-sm"
+              >
+                Diventa Partner
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
+
       <div className="container mx-auto px-4 py-16">
+        {/* Breadcrumb */}
+        <div className="mb-8">
+          <Link 
+            href="/" 
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors"
+          >
+            <ArrowLeft size={16} />
+            <span>Torna alla Home</span>
+          </Link>
+        </div>
+
         {/* Hero */}
         <section className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
@@ -141,7 +193,7 @@ export default async function EsperienzePage() {
         <section className="card max-w-3xl mx-auto text-center bg-gradient-to-r from-accent-50 to-primary-50 mt-16">
           <h2 className="text-3xl font-bold mb-4">Vuoi essere in questa lista?</h2>
           <p className="text-gray-700 mb-6">
-            Se gestisci una spa, ristorante healthy, centro wellness o attività outdoor a Verona, entra nel network Tribu Wellness!
+            Se gestisci una spa, ristorante healthy, centro wellness o attività outdoor a Verona, entra nel network Tribù Wellness!
           </p>
           <a href="/#partnership" className="btn-primary">
             Diventa Partner
