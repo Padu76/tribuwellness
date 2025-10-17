@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { AdminHeader } from '@/components/AdminAuth'
+import QRCodeGenerator from '@/components/QRCodeGenerator'
 import { supabase } from '@/lib/supabase'
-import { Plus, Edit, Trash2, ExternalLink, BarChart3 } from 'lucide-react'
+import { Plus, Edit, Trash2, ExternalLink, BarChart3, QrCode } from 'lucide-react'
 import Link from 'next/link'
 import type { Partner } from '@/types'
 
@@ -18,6 +19,7 @@ export default function PartnersManagement() {
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null)
+  const [qrPartner, setQrPartner] = useState<Partner | null>(null)
   const [formData, setFormData] = useState({
     slug: '',
     name: '',
@@ -234,7 +236,14 @@ export default function PartnersManagement() {
                     /{partner.slug} • {partner.tier} • {partner.location || 'N/A'}
                   </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    onClick={() => setQrPartner(partner)}
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 text-sm flex items-center gap-2"
+                  >
+                    <QrCode size={16} />
+                    QR Code
+                  </button>
                   <Link
                     href={`/admin/dashboard/analytics/${partner.slug}`}
                     className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 text-sm flex items-center gap-2"
@@ -271,6 +280,14 @@ export default function PartnersManagement() {
           )}
         </div>
       </div>
+
+      {/* QR Code Modal */}
+      {qrPartner && (
+        <QRCodeGenerator
+          partner={qrPartner}
+          onClose={() => setQrPartner(null)}
+        />
+      )}
     </div>
   )
 }
