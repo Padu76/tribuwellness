@@ -4,7 +4,7 @@ import PartnershipForm from '@/components/PartnershipForm'
 import ExperienceCard from '@/components/ExperienceCard'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Info } from 'lucide-react'
 import type { Activity } from '@/types'
 
 async function getFeaturedActivities(): Promise<Activity[]> {
@@ -32,7 +32,7 @@ export default async function HomePage() {
         {/* Hero Section */}
         <section className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            Tribu Wellness
+            Tribù Wellness
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Il portale che connette ospiti hotel con le migliori esperienze fitness e wellness di Verona
@@ -133,6 +133,18 @@ export default async function HomePage() {
                 <li>✓ Lead generation senza intermediari</li>
               </ul>
             </div>
+          </div>
+
+          {/* CTA Info Partner */}
+          <div className="text-center mt-8">
+            <Link 
+              href="/partner-info" 
+              className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold text-lg transition-colors"
+            >
+              <Info size={20} />
+              Scopri Tutti i Vantaggi e i Piani
+              <ArrowRight size={20} />
+            </Link>
           </div>
         </section>
 
