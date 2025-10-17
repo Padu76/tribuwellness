@@ -1,22 +1,25 @@
 import { MapPin, ExternalLink } from 'lucide-react'
+import Image from 'next/image'
 import type { Activity } from '@/types'
+import { getStaticPlaceholder } from '@/lib/unsplash'
 
 interface ExperienceCardProps {
   activity: Activity
 }
 
 export default function ExperienceCard({ activity }: ExperienceCardProps) {
+  const imageUrl = activity.image_url || getStaticPlaceholder(activity.category)
+
   return (
     <div className="card">
-      {activity.image_url && (
-        <div className="mb-4 -mx-6 -mt-6 rounded-t-xl overflow-hidden">
-          <img
-            src={activity.image_url}
-            alt={activity.title}
-            className="w-full h-48 object-cover"
-          />
-        </div>
-      )}
+      <div className="mb-4 -mx-6 -mt-6 rounded-t-xl overflow-hidden relative h-48">
+        <Image
+          src={imageUrl}
+          alt={activity.title}
+          fill
+          className="object-cover"
+        />
+      </div>
       
       <h3 className="text-xl font-semibold mb-2">
         {activity.title}
