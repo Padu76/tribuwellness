@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Mail, Phone, Building2, User, MessageSquare, CheckCircle } from 'lucide-react'
+import emailjs from '@emailjs/browser'
 
 export default function PartnershipForm() {
   const [formData, setFormData] = useState({
@@ -21,6 +22,7 @@ export default function PartnershipForm() {
     setError('')
 
     try {
+      // STEP 1: Salva nel database
       const response = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -31,6 +33,34 @@ export default function PartnershipForm() {
 
       if (!response.ok) {
         throw new Error(data.error || 'Errore durante l\'invio')
+      }
+
+      // STEP 2: Invia email notifica con EmailJS
+      try {
+        const emailParams = {
+          hotel_name: formData.hotel_name,
+          contact_name: formData.contact_name,
+          email: formData.email,
+          phone: formData.phone || 'Non fornito',
+          message: formData.message || 'Nessun messaggio',
+          date: new Date().toLocaleString('it-IT', {
+            dateStyle: 'full',
+            timeStyle: 'short',
+          }),
+        }
+
+        await emailjs.send(
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+          emailParams,
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+        )
+
+        console.log('✅ Email notifica inviata con successo')
+      } catch (emailError) {
+        // Log errore ma non bloccare il successo
+        // Il lead è comunque salvato nel DB
+        console.error('❌ Errore invio email:', emailError)
       }
 
       setSubmitted(true)
@@ -76,7 +106,7 @@ export default function PartnershipForm() {
   return (
     <div className="card max-w-2xl mx-auto bg-gradient-to-r from-primary-50 to-accent-50">
       <h2 className="text-3xl font-bold mb-4 text-center">
-        Diventa Partner Tribu Wellness
+        Diventa Partner Tribù Wellness
       </h2>
       <p className="text-gray-700 mb-6 text-center">
         Offri ai tuoi ospiti un servizio wellness esclusivo senza costi di gestione

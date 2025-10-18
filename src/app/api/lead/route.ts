@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import emailjs from '@emailjs/browser'
 
 export async function POST(request: Request) {
   try {
@@ -38,36 +37,6 @@ export async function POST(request: Request) {
         { error: 'Errore salvataggio nel database' },
         { status: 500 }
       )
-    }
-
-    // Invia notifica email con EmailJS
-    try {
-      const emailParams = {
-        hotel_name,
-        contact_name,
-        email,
-        phone: phone || 'Non fornito',
-        message: message || 'Nessun messaggio',
-        date: new Date().toLocaleString('it-IT', {
-          dateStyle: 'full',
-          timeStyle: 'short',
-        }),
-      }
-
-      // EmailJS - inizializza e invia
-      emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!)
-
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        emailParams
-      )
-
-      console.log('✅ Email notifica inviata con successo')
-    } catch (emailError) {
-      // Log errore ma non bloccare la response
-      // Il lead è comunque salvato nel DB
-      console.error('❌ Errore invio email:', emailError)
     }
 
     return NextResponse.json({
