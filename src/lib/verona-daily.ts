@@ -13,7 +13,7 @@ interface VeronaEvent {
   price?: string
 }
 
-const VERONA_DAILY_API = 'https://verona-daily.vercel.app/api/events'
+const VERONA_DAILY_API = 'https://verona-daily.vercel.app/api/scrape/real-scrape'
 const CACHE_DURATION = 1000 * 60 * 30 // 30 minuti
 
 let cachedEvents: VeronaEvent[] | null = null
