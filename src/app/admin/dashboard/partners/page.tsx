@@ -20,6 +20,7 @@ export default function PartnersManagement() {
   const [showForm, setShowForm] = useState(false)
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null)
   const [qrPartner, setQrPartner] = useState<Partner | null>(null)
+  const [deleteError, setDeleteError] = useState<string>('')
   const [formData, setFormData] = useState({
     slug: '',
     name: '',
@@ -82,15 +83,37 @@ export default function PartnersManagement() {
     setShowForm(true)
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Sei sicuro di voler eliminare questo partner?')) return
+  const handleDelete = async (partner: Partner) => {
+    const confirmMessage = `⚠️ ATTENZIONE!\n\nStai per eliminare:\n\n"${partner.name}" (${partner.slug})\n\nQuesta azione è IRREVERSIBILE.\n\nSei sicuro di voler procedere?`
     
-    await supabase
-      .from('partners')
-      .delete()
-      .eq('id', id)
-    
-    loadPartners()
+    if (!window.confirm(confirmMessage)) {
+      return
+    }
+
+    setDeleteError('')
+
+    try {
+      const { error } = await supabase
+        .from('partners')
+        .delete()
+        .eq('id', partner.id)
+
+      if (error) {
+        console.error('Delete error:', error)
+        setDeleteError(`Errore eliminazione: ${error.message}`)
+        alert(`❌ Errore: ${error.message}`)
+        return
+      }
+
+      // Successo
+      alert('✅ Partner eliminato con successo!')
+      loadPartners()
+    } catch (err) {
+      console.error('Delete error:', err)
+      const errorMsg = err instanceof Error ? err.message : 'Errore sconosciuto'
+      setDeleteError(errorMsg)
+      alert(`❌ Errore: ${errorMsg}`)
+    }
   }
 
   const resetForm = () => {
@@ -136,6 +159,16 @@ export default function PartnersManagement() {
             Nuovo Partner
           </button>
         </div>
+
+        {/* Error Alert */}
+        {deleteError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 flex justify-between items-center">
+            <span>{deleteError}</span>
+            <button onClick={() => setDeleteError('')} className="text-red-900 font-bold">
+              ✕
+            </button>
+          </div>
+        )}
 
         {/* Form */}
         {showForm && (
@@ -268,7 +301,7 @@ export default function PartnersManagement() {
                     Modifica
                   </button>
                   <button
-                    onClick={() => handleDelete(partner.id)}
+                    onClick={() => handleDelete(partner)}
                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 text-sm flex items-center gap-2"
                   >
                     <Trash2 size={16} />
