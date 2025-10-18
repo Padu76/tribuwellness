@@ -134,18 +134,46 @@ export default function PartnerInfoPage() {
             <h2 className="text-3xl font-bold text-center mb-8">Cosa Vede l'Ospite</h2>
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-primary-200">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 bg-gray-200 rounded"></div>
+                <div className="bg-white p-4 rounded-xl shadow-lg border-2 border-primary-200">
+                  {/* Header con logo hotel */}
+                  <div className="flex items-center gap-3 mb-4 pb-3 border-b">
+                    <div className="w-10 h-10 bg-primary-600 rounded flex items-center justify-center text-white font-bold">H</div>
                     <div>
-                      <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
-                      <div className="h-3 bg-gray-100 rounded w-24"></div>
+                      <div className="font-bold text-sm">Hotel Verona</div>
+                      <div className="text-xs text-gray-500">Partner Wellness</div>
                     </div>
                   </div>
-                  <div className="space-y-3">
-                    <div className="h-32 bg-gradient-to-r from-primary-100 to-accent-100 rounded-lg"></div>
-                    <div className="h-24 bg-gray-50 rounded-lg"></div>
-                    <div className="h-24 bg-gray-50 rounded-lg"></div>
+                  
+                  {/* Card Tribù Studio */}
+                  <div className="mb-3 bg-gradient-to-br from-primary-50 to-accent-50 p-3 rounded-lg border-2 border-primary-200 relative">
+                    <div className="absolute top-2 right-2 bg-accent-500 text-white text-xs px-2 py-1 rounded-full font-bold">-20%</div>
+                    <div className="h-20 bg-primary-200 rounded mb-2"></div>
+                    <div className="font-bold text-xs mb-1">💪 Tribù Studio</div>
+                    <div className="text-xs text-gray-600 mb-2">Personal training con sconto 20%</div>
+                    <div className="bg-primary-600 text-white text-xs py-1 rounded text-center font-semibold">Prenota</div>
+                  </div>
+
+                  {/* Card Eventi */}
+                  <div className="mb-3 bg-purple-50 p-3 rounded-lg">
+                    <div className="font-bold text-xs mb-2">📅 Eventi Oggi</div>
+                    <div className="space-y-2">
+                      <div className="flex gap-2 text-xs">
+                        <div className="w-12 h-12 bg-purple-200 rounded flex-shrink-0"></div>
+                        <div className="flex-1">
+                          <div className="font-semibold">Opera Arena</div>
+                          <div className="text-gray-600 text-xs">Questa sera</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Esperienze */}
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="font-bold text-xs mb-2">🧘 Altre Esperienze</div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="h-16 bg-blue-100 rounded"></div>
+                      <div className="h-16 bg-green-100 rounded"></div>
+                    </div>
                   </div>
                 </div>
               </div>
