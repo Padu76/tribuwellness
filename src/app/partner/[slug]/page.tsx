@@ -3,109 +3,118 @@ import { supabase } from '@/lib/supabase'
 import Footer from '@/components/Footer'
 import PartnerHero from '@/components/PartnerHero'
 import StudioSection from '@/components/StudioSection'
-import type { Partner } from '@/types'
+import EventsWidget from '@/components/EventsWidget'
+import ExperienceCard from '@/components/ExperienceCard'
+import { Sparkles } from 'lucide-react'
+import type { Partner, Activity } from '@/types'
+
+interface PageProps {
+  params: {
+    slug: string
+  }
+}
 
 async function getPartner(slug: string): Promise<Partner | null> {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('partners')
     .select('*')
     .eq('slug', slug)
     .eq('is_active', true)
     .single()
 
-  if (error || !data) return null
   return data
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const partner = await getPartner(params.slug)
-  
-  if (!partner) {
-    return {
-      title: 'Partner non trovato | Tribu Wellness',
-    }
-  }
+async function getActivities(): Promise<Activity[]> {
+  const { data } = await supabase
+    .from('activities')
+    .select('*')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
 
-  return {
-    title: `${partner.name} | Tribu Wellness`,
-    description: `Benvenuto ospite di ${partner.name}. Allenati con Tribù Studio con SCONTO 20% esclusivo e scopri esperienze wellness a Verona.`,
-  }
+  return data || []
 }
 
-export default async function PartnerPage({ params }: { params: { slug: string } }) {
+export default async function PartnerLandingPage({ params }: PageProps) {
   const partner = await getPartner(params.slug)
 
   if (!partner) {
     notFound()
   }
 
-  // Track visit
-  await supabase
-    .from('analytics_events')
-    .insert({
-      partner_slug: partner.slug,
-      event_type: 'visit',
-    })
+  const activities = await getActivities()
+
+  // Filtra Tribù Studio dalle altre esperienze
+  const tribuStudio = activities.find(a => a.title.toLowerCase().includes('tribù studio'))
+  const otherActivities = activities.filter(a => a.id !== tribuStudio?.id)
 
   return (
     <>
-      <div className="container mx-auto px-4 py-16">
-        {/* Hero Partner */}
-        <PartnerHero partner={partner} />
+      <PartnerHero partner={partner} />
 
-        {/* Info Sconto Tribù Studio */}
-        <section className="mb-8">
-          <div className="card max-w-4xl mx-auto bg-gradient-to-r from-accent-100 to-accent-50 border-2 border-accent-500">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <span className="text-4xl">🎁</span>
-              <h2 className="text-2xl md:text-3xl font-bold text-center">Vantaggi Esclusivi Ospiti {partner.name}</h2>
-            </div>
-            <div className="bg-white rounded-lg p-6 max-w-2xl mx-auto">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="bg-primary-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">
-                  20%
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Sconto Tribù Studio</h3>
-                  <p className="text-gray-700 text-sm mb-3">
-                    Allenati con personal trainer certificati e risparmia il <strong>20% su tutte le sessioni</strong>!
-                  </p>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>✓ Lezioni individuali Personal Training</li>
-                    <li>✓ Sessioni di coppia</li>
-                    <li>✓ Prima lezione con massaggio incluso</li>
-                  </ul>
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 text-center mt-4">
-                * Menziona di essere ospite di {partner.name} quando prenoti
+      <div className="container mx-auto px-4 py-16">
+        {/* Tribù Studio con Sconto 20% */}
+        <StudioSection 
+          showDiscount={true} 
+          partnerName={partner.name}
+        />
+
+        {/* NUOVO: Widget Eventi Verona Daily */}
+        <EventsWidget />
+
+        {/* Altre Esperienze Wellness */}
+        {otherActivities.length > 0 && (
+          <section className="mb-16">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Scopri Anche...</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Altre esperienze wellness selezionate per completare il tuo soggiorno
               </p>
             </div>
-          </div>
-        </section>
 
-        {/* Tribù Studio con sconto 20% */}
-        <StudioSection partnerName={partner.name} showDiscount={true} />
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {otherActivities.slice(0, 6).map((activity) => (
+                <ExperienceCard key={activity.id} activity={activity} />
+              ))}
+            </div>
+          </section>
+        )}
 
-        {/* Esperienze Locali */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            Scopri Anche...
-          </h2>
-          <div className="card max-w-3xl mx-auto text-center">
-            <div className="text-4xl mb-4">🌟</div>
-            <h3 className="text-2xl font-semibold mb-3">
-              Altre Esperienze Wellness
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Spa, ristoranti healthy, attività outdoor e molto altro nel territorio veronese. Alcune con sconti dedicati!
-            </p>
-            <a
-              href="/esperienze"
-              className="btn-primary inline-flex items-center"
-            >
-              Esplora Tutte le Esperienze
-            </a>
+        {/* Box Vantaggi Esclusivi Ospiti */}
+        <section className="card max-w-3xl mx-auto bg-gradient-to-br from-primary-50 to-accent-50 border-2 border-primary-200">
+          <div className="flex items-start gap-4">
+            <div className="bg-primary-600 text-white p-3 rounded-full">
+              <Sparkles size={28} />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-2xl font-bold mb-3">Vantaggi Esclusivi Ospiti {partner.name}</h3>
+              <div className="space-y-3 text-gray-700">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">💪</span>
+                  <div>
+                    <strong className="block">Sconto 20% Tribù Studio</strong>
+                    <p className="text-sm">Personal training e lezioni di gruppo con trainer qualificati</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🎭</span>
+                  <div>
+                    <strong className="block">Eventi Verona Daily</strong>
+                    <p className="text-sm">Scopri opera, concerti, teatro e sagre durante il soggiorno</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🧘</span>
+                  <div>
+                    <strong className="block">Esperienze Wellness</strong>
+                    <p className="text-sm">Spa, ristoranti healthy e attività outdoor selezionate</p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 mt-4 italic">
+                💡 Menziona di essere ospite di {partner.name} quando prenoti per ottenere gli sconti dedicati
+              </p>
+            </div>
           </div>
         </section>
       </div>
