@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Footer from '@/components/Footer'
-import { Check, Smartphone, TrendingUp, Users, Zap, Crown, Star, BarChart3, Globe, Award, Package, Dumbbell, Home } from 'lucide-react'
+import { Check, Smartphone, TrendingUp, Users, Zap, Crown, Star, BarChart3, Globe, Award, Package, Dumbbell, Home, ExternalLink } from 'lucide-react'
 
 export const metadata = {
   title: 'Diventa Partner | Tribù Wellness',
@@ -147,7 +147,13 @@ export default function PartnerInfoPage() {
                   {/* Card Tribù Studio */}
                   <div className="mb-3 bg-gradient-to-br from-primary-50 to-accent-50 p-3 rounded-lg border-2 border-primary-200 relative">
                     <div className="absolute top-2 right-2 bg-accent-500 text-white text-xs px-2 py-1 rounded-full font-bold">-20%</div>
-                    <div className="h-20 bg-primary-200 rounded mb-2"></div>
+                    <div className="h-20 bg-primary-200 rounded mb-2 overflow-hidden">
+                      <img 
+                        src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop" 
+                        alt="Fitness"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                     <div className="font-bold text-xs mb-1">💪 Tribù Studio</div>
                     <div className="text-xs text-gray-600 mb-2">Personal training con sconto 20%</div>
                     <div className="bg-primary-600 text-white text-xs py-1 rounded text-center font-semibold">Prenota</div>
@@ -158,7 +164,13 @@ export default function PartnerInfoPage() {
                     <div className="font-bold text-xs mb-2">📅 Eventi Oggi</div>
                     <div className="space-y-2">
                       <div className="flex gap-2 text-xs">
-                        <div className="w-12 h-12 bg-purple-200 rounded flex-shrink-0"></div>
+                        <div className="w-12 h-12 bg-purple-200 rounded flex-shrink-0 overflow-hidden">
+                          <img 
+                            src="https://images.unsplash.com/photo-1574784914708-4c5a0f7d78b1?w=100&h=100&fit=crop" 
+                            alt="Opera"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
                         <div className="flex-1">
                           <div className="font-semibold">Opera Arena</div>
                           <div className="text-gray-600 text-xs">Questa sera</div>
@@ -171,15 +183,27 @@ export default function PartnerInfoPage() {
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <div className="font-bold text-xs mb-2">🧘 Altre Esperienze</div>
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="h-16 bg-blue-100 rounded"></div>
-                      <div className="h-16 bg-green-100 rounded"></div>
+                      <div className="h-16 bg-blue-100 rounded overflow-hidden">
+                        <img 
+                          src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200&h=100&fit=crop" 
+                          alt="Spa"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="h-16 bg-green-100 rounded overflow-hidden">
+                        <img 
+                          src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=100&fit=crop" 
+                          alt="Food"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div>
                 <h3 className="text-2xl font-bold mb-4">Landing Personalizzata</h3>
-                <ul className="space-y-3">
+                <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-3">
                     <Check className="text-primary-600 flex-shrink-0 mt-1" size={20} />
                     <span><strong>Logo del tuo hotel</strong> in alto</span>
@@ -190,6 +214,10 @@ export default function PartnerInfoPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <Check className="text-primary-600 flex-shrink-0 mt-1" size={20} />
+                    <span><strong>Eventi Verona Daily</strong> cosa fare oggi</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <Check className="text-primary-600 flex-shrink-0 mt-1" size={20} />
                     <span><strong>Spa, ristoranti healthy, outdoor</strong> della zona</span>
                   </li>
                   <li className="flex items-start gap-3">
@@ -197,6 +225,16 @@ export default function PartnerInfoPage() {
                     <span><strong>Prenotazione WhatsApp</strong> con 1 click</span>
                   </li>
                 </ul>
+                
+                <a 
+                  href="/partner/hotel-esempio" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary inline-flex items-center gap-2"
+                >
+                  <ExternalLink size={20} />
+                  Vedi Esempio Live
+                </a>
               </div>
             </div>
           </div>
