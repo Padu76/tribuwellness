@@ -22,8 +22,15 @@ let cacheTimestamp: number | null = null
 /**
  * Fetch eventi da Verona Daily API
  * Con cache di 30 minuti per performance
+ * 
+ * NOTA: Temporaneamente usa eventi fallback finché API Verona Daily è pubblica
  */
 export async function getVeronaEvents(limit: number = 5): Promise<VeronaEvent[]> {
+  // TEMPORANEO: Usa sempre fallback finché API non è pronta
+  // TODO: Rimuovi questo quando https://verona-daily.vercel.app/api/events è pubblico
+  return getFallbackEvents(limit)
+
+  /* CODICE ORIGINALE - Riattiva quando API è pronta
   try {
     // Check cache
     const now = Date.now()
@@ -33,26 +40,32 @@ export async function getVeronaEvents(limit: number = 5): Promise<VeronaEvent[]>
 
     // Fetch fresh data
     const response = await fetch(VERONA_DAILY_API, {
-      next: { revalidate: 1800 } // Next.js cache: 30 minuti
+      next: { revalidate: 1800 }
     })
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`)
+      console.warn(`Verona Daily API returned ${response.status}, using fallback events`)
+      return getFallbackEvents(limit)
     }
 
     const events: VeronaEvent[] = await response.json()
+
+    if (!events || events.length === 0) {
+      console.warn('Verona Daily API returned no events, using fallback')
+      return getFallbackEvents(limit)
+    }
 
     // Update cache
     cachedEvents = events
     cacheTimestamp = now
 
-    // Return limited events
     return events.slice(0, limit)
 
   } catch (error) {
-    console.error('Error fetching Verona Daily events:', error)
+    console.warn('Error fetching Verona Daily events, using fallback:', error)
     return getFallbackEvents(limit)
   }
+  */
 }
 
 /**

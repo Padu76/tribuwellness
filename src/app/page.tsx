@@ -82,6 +82,9 @@ export default async function HomePage() {
           </section>
         )}
 
+        {/* Eventi Verona Daily */}
+        <EventsWidget />
+
         {/* Come Funziona */}
         <section id="come-funziona" className="mb-16">
           <h2 className="text-3xl font-bold text-center mb-12">Come Funziona</h2>
